@@ -1,0 +1,208 @@
+-- =============================================
+-- LeadFlow AI — Supabase Schema
+-- Run this in Supabase SQL Editor
+-- =============================================
+
+-- Enable UUID extension
+create extension if not exists "uuid-ossp";
+
+-- ── USERS / BUSINESSES ──
+create table public.businesses (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references auth.users(id) on delete cascade,
+  business_name text not null,
+  owner_name text,
+  phone text,
+  email text,
+  plan text default 'free' check (plan in ('free','pro','premium')),
+  plan_status text default 'active' check (plan_status in ('active','cancelled','past_due')),
+  leads_used int default 0,
+  leads_limit int default 10,
+  dodo_customer_id text,
+  dodo_subscription_id text,
+  twilio_sid text,
+  twilio_token text,
+  twilio_phone text,
+  bland_key text,
+  sector text default 'real_estate',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- ── LEADS ──
+create table public.leads (
+  id uuid primary key default uuid_generate_v4(),
+  business_id uuid references public.businesses(id) on delete cascade,
+  name text,
+  phone text not null,
+  email text,
+  source text default 'website',
+  sector text default 'real_estate',
+  property_address text,
+  property_condition text,
+  asking_price text,
+  urgency text,
+  motivation text,
+  score int default 0 check (score >= 0 and score <= 10),
+  status text default 'new' check (status in ('new','call_now','follow_up','not_ready','closed')),
+  ai_summary text,
+  notes text,
+  assigned_to text,
+  last_contact timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- ── CONVERSATIONS ──
+create table public.conversations (
+  id uuid primary key default uuid_generate_v4(),
+  lead_id uuid references public.leads(id) on delete cascade,
+  business_id uuid references public.businesses(id) on delete cascade,
+  channel text default 'sms' check (channel in ('sms','voice','email')),
+  direction text check (direction in ('inbound','outbound')),
+  message text not null,
+  created_at timestamptz default now()
+);
+
+-- ── CALL LOGS ──
+create table public.call_logs (
+  id uuid primary key default uuid_generate_v4(),
+  business_id uuid references public.businesses(id) on delete cascade,
+  lead_id uuid references public.leads(id) on delete cascade,
+  lead_name text,
+  agent_name text,
+  duration_mins int default 0,
+  outcome text check (outcome in ('answered','missed','voicemail')),
+  notes text,
+  created_at timestamptz default now()
+);
+
+-- ── PROPERTIES ──
+create table public.properties (
+  id uuid primary key default uuid_generate_v4(),
+  business_id uuid references public.businesses(id) on delete cascade,
+  address text not null,
+  type text,
+  beds int,
+  baths int,
+  sqft int,
+  asking_price text,
+  arv text,
+  status text default 'available' check (status in ('available','contract','sold')),
+  photo_url text,
+  notes text,
+  created_at timestamptz default now()
+);
+
+-- ── EMPLOYEES ──
+create table public.employees (
+  id uuid primary key default uuid_generate_v4(),
+  business_id uuid references public.businesses(id) on delete cascade,
+  name text not null,
+  role text,
+  phone text,
+  email text,
+  status text default 'out' check (status in ('in','out')),
+  leads_assigned int default 0,
+  deals_closed int default 0,
+  created_at timestamptz default now()
+);
+
+-- ── ATTENDANCE ──
+create table public.attendance (
+  id uuid primary key default uuid_generate_v4(),
+  employee_id uuid references public.employees(id) on delete cascade,
+  business_id uuid references public.businesses(id) on delete cascade,
+  type text check (type in ('in','out')),
+  created_at timestamptz default now()
+);
+
+-- ── ROW LEVEL SECURITY ──
+alter table public.businesses enable row level security;
+alter table public.leads enable row level security;
+alter table public.conversations enable row level security;
+alter table public.call_logs enable row level security;
+alter table public.properties enable row level security;
+alter table public.employees enable row level security;
+alter table public.attendance enable row level security;
+
+-- Businesses: user sees only their own
+create policy "own business" on public.businesses
+  for all using (auth.uid() = user_id);
+
+-- Leads: business owner only
+create policy "own leads" on public.leads
+  for all using (
+    business_id in (
+      select id from public.businesses where user_id = auth.uid()
+    )
+  );
+
+-- Conversations: business owner only
+create policy "own conversations" on public.conversations
+  for all using (
+    business_id in (
+      select id from public.businesses where user_id = auth.uid()
+    )
+  );
+
+-- Call logs: business owner only
+create policy "own calls" on public.call_logs
+  for all using (
+    business_id in (
+      select id from public.businesses where user_id = auth.uid()
+    )
+  );
+
+-- Properties: business owner only
+create policy "own properties" on public.properties
+  for all using (
+    business_id in (
+      select id from public.businesses where user_id = auth.uid()
+    )
+  );
+
+-- Employees: business owner only
+create policy "own employees" on public.employees
+  for all using (
+    business_id in (
+      select id from public.businesses where user_id = auth.uid()
+    )
+  );
+
+-- Attendance: business owner only
+create policy "own attendance" on public.attendance
+  for all using (
+    business_id in (
+      select id from public.businesses where user_id = auth.uid()
+    )
+  );
+
+-- Service role bypass (for API routes)
+create policy "service bypass leads" on public.leads
+  for all using (auth.role() = 'service_role');
+
+create policy "service bypass conversations" on public.conversations
+  for all using (auth.role() = 'service_role');
+
+-- ── INDEXES ──
+create index leads_business_id on public.leads(business_id);
+create index leads_status on public.leads(status);
+create index leads_created_at on public.leads(created_at desc);
+create index conversations_lead_id on public.conversations(lead_id);
+create index attendance_employee_id on public.attendance(employee_id);
+
+-- ── AUTO UPDATE updated_at ──
+create or replace function update_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger businesses_updated_at before update on public.businesses
+  for each row execute function update_updated_at();
+
+create trigger leads_updated_at before update on public.leads
+  for each row execute function update_updated_at();

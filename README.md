@@ -22,9 +22,21 @@ other 11 industries.
 5. Authentication → URL Configuration → set Site URL and Redirect URLs to your Vercel domain
    once deployed (Step 8)
 
-## Step 2 — NVIDIA API Key (Free)
+## Step 1.5 — Schema Update (Free, 30 seconds)
 
-https://build.nvidia.com → get an API key → `NVIDIA_API_KEY`.
+The `api/` and `lib/` backend needs three small additions to the schema you
+already ran. SQL Editor → paste `supabase_schema_update.sql` → Run. It's
+idempotent, so this is safe even if you're not sure whether you ran it before.
+
+## Step 2 — Groq API Key (Free)
+
+https://console.groq.com → get an API key → `GROQ_API_KEY`. This is what
+runs the AI qualification conversations (`lib/groq.js`).
+
+(NVIDIA was the original plan here, but its free tier's terms restrict
+production use — Groq's free tier doesn't have that restriction, so the
+code uses Groq instead. `GROQ_MODEL_PRIMARY` / `GROQ_MODEL_FALLBACK` in
+`.env.example` are already set to Groq's current recommended models.)
 
 ## Step 3 — Twilio (SMS, Calls, WhatsApp)
 

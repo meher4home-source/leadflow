@@ -86,14 +86,15 @@
           Continue with Google
         </button>
         <div class="divider">or</div>
-        <div class="field"><label>Full name</label><input id="suName" placeholder="Jordan Miller"></div>
-        <div class="field"><label>Email</label><input id="suEmail" type="email" placeholder="you@business.com"></div>
-        <div class="field"><label>Password</label>
-          <div class="pw-row">
-            <input id="suPass" type="password" placeholder="Min. 6 characters">
-            <button type="button" class="pw-toggle" onclick="LF.togglePassword('suPass', this)">Show</button>
+       <div class="field"><label>Full name <span style="color:red;">*</span></label><input id="suName" placeholder="Jordan Miller" required></div>
+       <div class="field"><label>Email</label><input id="suEmail" type="email" placeholder="you@business.com"></div>
+       <div class="field"><label>Phone Number <span style="color:red;">*</span></label><input id="suPhone" type="tel" placeholder="+1 (555) 000-0000" required></div>
+       <div class="field"><label>Password <span style="color:red;">*</span></label>
+         <div class="pw-row">
+           <input id="suPass" type="password" placeholder="Min. 6 characters" required>
+           <button type="button" class="pw-toggle" onclick="LF.togglePassword('suPass', this)">Show</button>
+           </div>
           </div>
-        </div>
         <button class="btn btn-primary btn-block" onclick="onboardSignup()">Create account →</button>
         <p class="switch-line">Already have an account? <a onclick="showLogin()">Sign in</a></p>
       </div>

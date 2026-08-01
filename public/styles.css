@@ -348,3 +348,40 @@ button{font-family:var(--sans);cursor:pointer}
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================
+   UI IMPROVEMENTS FOR BETTER CONVERSION
+   ============================================ */
+
+/* Highlight price in pricing table */
+.highlight-price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--indigo);
+    background: var(--indigo-tint);
+    padding: 2px 12px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* Highlight ROI calculator */
+.roi-highlight {
+    border: 2px solid var(--indigo-b) !important;
+    box-shadow: 0 8px 30px rgba(79, 70, 229, 0.15) !important;
+}
+
+/* Required field star (use existing .phone-required-star instead) */
+
+/* Value proposition highlight */
+.value-highlight {
+    color: var(--indigo);
+    font-weight: 700;
+}
+
+/* Responsive adjustments for new UI */
+@media (max-width: 640px) {
+    .highlight-price {
+        font-size: 1.1rem;
+        padding: 2px 8px;
+    }
+}

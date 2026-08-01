@@ -167,3 +167,184 @@ button{font-family:var(--sans);cursor:pointer}
   color: var(--ink);
   border-color: var(--border);
 }
+
+/* ----- TRUST BADGE ----- */
+.trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.15);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: #4ade80;
+    animation: fadeInDown 0.5s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ----- HERO STATS ----- */
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.hero-stats .stat-item {
+    text-align: center;
+}
+
+.hero-stats .stat-number {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.hero-stats .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* ----- HERO FEATURES ----- */
+.hero-features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.hero-features .hf-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+
+.hero-features .hf-item .check {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+/* ----- CANCEL ANYTIME BANNER (Footer) ----- */
+.cancel-banner-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(74, 222, 128, 0.05);
+    border: 1px solid rgba(74, 222, 128, 0.08);
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 10px;
+}
+
+.cancel-banner-footer strong {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+/* ----- CANCEL ANYTIME BANNER (Onboarding) ----- */
+.cancel-banner-onboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(74, 222, 128, 0.05);
+    border: 1px solid rgba(74, 222, 128, 0.08);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 12px 0;
+}
+
+.cancel-banner-onboard strong {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+/* ----- PHONE INPUT - REQUIRED STAR ----- */
+.phone-required-star {
+    color: #ef4444;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+/* ----- INDUSTRY DEAL BADGES (onboarding) ----- */
+.industry-opt .deal-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+    padding: 1px 8px;
+    border-radius: 999px;
+    margin-top: 3px;
+}
+
+.industry-opt .sms-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.08);
+    padding: 1px 8px;
+    border-radius: 999px;
+    margin-top: 3px;
+    margin-left: 4px;
+}
+
+.industry-opt .example-q {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+    padding: 3px 6px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+}
+
+/* ----- PHONE INPUT WRAPPER ----- */
+.phone-input-wrapper {
+    position: relative;
+}
+
+.phone-input-wrapper input {
+    padding-left: 14px;
+}
+
+/* ----- RESPONSIVE ----- */
+@media (max-width: 640px) {
+    .hero-stats {
+        gap: 20px;
+    }
+    .hero-stats .stat-number {
+        font-size: 20px;
+    }
+    .cancel-banner-footer {
+        font-size: 11px;
+        flex-wrap: wrap;
+        text-align: center;
+    }
+    .industry-list {
+        grid-template-columns: 1fr;
+    }
+}

@@ -108,25 +108,35 @@ async function saveBusinessInfo() {
 }
 
 async function startCheckout() {
-    const selectedPlan = document.querySelector('.plan-opt.sel');
-    if (!selectedPlan) {
-        document.getElementById('pricingErr').textContent = 'Please select a plan first.';
-        return;
+  const btn = document.getElementById('checkoutBtn');
+  btn.disabled = true;
+  btn.textContent = 'Redirecting…';
+  const user = await LF.getSession();
+  if (!user) {
+    window.location.href = '/onboarding.html';
+    return;
+  }
+  try {
+    const { data: sessionData } = await LF.client.auth.getSession();
+    const token = sessionData.session?.access_token;
+    const res = await fetch('/api/payments/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ plan: state.plan }),
+    });
+    const data = await res.json();
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url;
+    } else {
+      showError('pricingErr', data.error || 'Could not start checkout. Check your Dodo Payments setup.');
+      btn.disabled = false;
+      btn.textContent = 'Continue to Payment →';
     }
-
-    const planId = selectedPlan.id;
-    let paymentLink = '';
-
-    if (planId === 'planStandard') {
-        paymentLink = 'https://pay.dodopayments.com/pdt_ONkVvhA4rM8YeCi9Obbal';
-    } else if (planId === 'planMulti') {
-        paymentLink = 'https://pay.dodopayments.com/pdt_ONkVwEjraL7ML6wEmmn50';
-    }
-
-    if (paymentLink) {
-        window.location.href = paymentLink;
-    }
-}
+  } catch (err) {
+    showError('pricingErr', 'Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Continue to Payment →';
+  }
 }
 
 async function resumeAfterAuth() {

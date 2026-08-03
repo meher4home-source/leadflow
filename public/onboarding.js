@@ -39,9 +39,10 @@ function selectPlan(plan) {
   document.getElementById('planMulti').classList.toggle('sel', plan === 'multilocation');
 }
 
-function showLogin() {
-  document.getElementById('step-signup').classList.remove('active');
+ function showLogin() {
   document.getElementById('step-login').classList.add('active');
+  document.getElementById('step-signup').classList.remove('active');
+}
 }
 function showSignup() {
   document.getElementById('step-login').classList.remove('active');

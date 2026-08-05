@@ -175,3 +175,8 @@ async function resumeAfterAuth() {
     if (user) goStep(4);
   }
 })();
+
+// Force show login form on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('step-login').classList.add('active');
+});

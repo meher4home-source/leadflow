@@ -7,8 +7,8 @@ LF.client = null;
 LF.init = async function () {
   if (LF.client) return LF.client;
 
-  let SUPABASE_URL = 'YOUR_SUPABASE_URL';
-  let SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+  let SUPABASE_URL = 'https://wcdsopdmijqhznkbycjf.supabase.co';
+  let SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZHNvcGRtaWpxaHpua2J5Y2pmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNDQ5NTMsImV4cCI6MjEwMDgyMDk1M30.TYhTTvxyXSdVz2HfxyObuSIlOrONXQroUtKYsAchCDU';
 
   try {
     if (typeof process !== 'undefined' && process.env) {

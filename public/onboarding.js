@@ -43,7 +43,7 @@ function selectPlan(plan) {
   document.getElementById('step-login').classList.add('active');
   document.getElementById('step-signup').classList.remove('active');
 }
-}
+
 function showSignup() {
   document.getElementById('step-login').classList.remove('active');
   document.getElementById('step-signup').classList.add('active');
@@ -127,7 +127,6 @@ async function startCheckout() {
     if (paymentLink) {
         window.location.href = paymentLink;
     }
-}
 }
 
 async function resumeAfterAuth() {

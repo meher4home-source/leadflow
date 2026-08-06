@@ -183,5 +183,13 @@ async function resumeAfterAuth() {
 
 // Force show login form on page load
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('step-login').classList.add('active');
+    // Check URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const step = params.get('step');
+    
+    if (step === 'login') {
+        showLogin();
+    } else {
+        showSignup(); // Default show signup
+    }
 });

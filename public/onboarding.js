@@ -42,11 +42,17 @@ function selectPlan(plan) {
  function showLogin() {
   document.getElementById('step-login').classList.add('active');
   document.getElementById('step-signup').classList.remove('active');
+  document.getElementById('step-industry').classList.remove('active');
+  document.getElementById('step-business').classList.remove('active');
+  document.getElementById('step-pricing').classList.remove('active');
 }
 
 function showSignup() {
-  document.getElementById('step-login').classList.remove('active');
   document.getElementById('step-signup').classList.add('active');
+  document.getElementById('step-login').classList.remove('active');
+  document.getElementById('step-industry').classList.remove('active');
+  document.getElementById('step-business').classList.remove('active');
+  document.getElementById('step-pricing').classList.remove('active');
 }
 
 function goStep(n) {
